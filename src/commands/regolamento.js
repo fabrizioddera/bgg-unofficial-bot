@@ -24,7 +24,7 @@ export function registraComandoRegolamento(bot) {
           {
             parse_mode: "Markdown",
             ...Markup.inlineKeyboard([
-              [Markup.button.url("📂 File su BGG", linkFilesBGG(gioco.bgg_id))]
+              [Markup.button.url("📂 File 🇮🇹 su BGG", linkFilesBGG(gioco.bgg_id))]
             ])
           }
         );

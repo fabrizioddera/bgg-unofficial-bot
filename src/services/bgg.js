@@ -117,6 +117,11 @@ export async function dettagliGioco(bggId, tentativiMax = 5) {
 /**
  * Link diretto alla sezione file (regolamenti, FAQ, traduzioni) di un gioco su BGG.
  */
-export function linkFilesBGG(bggId) {
-  return `https://boardgamegeek.com/boardgame/${bggId}/files`;
+const LANG_ITALIANO = "2193"; // languageid BGG per l'italiano
+
+// Link alla sezione file del gioco, filtrata per lingua (default: italiano).
+// Passa lingua=null per tutti i file senza filtro.
+export function linkFilesBGG(bggId, lingua = LANG_ITALIANO) {
+  const base = `https://boardgamegeek.com/boardgame/${bggId}/files`;
+  return lingua ? `${base}?pageid=1&languageid=${lingua}` : base;
 }
