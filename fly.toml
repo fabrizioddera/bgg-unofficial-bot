@@ -1,0 +1,12 @@
+# Bot Telegram BGG su Fly.io — worker in polling, nessuna porta HTTP esposta.
+app = "bgg-unofficial-bot-fddera"
+primary_region = "fra"
+
+[build]
+
+# Bot in long polling: la macchina deve restare sempre accesa.
+# Nessun [http_service]: non riceve traffico in ingresso.
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
+  cpus = 1

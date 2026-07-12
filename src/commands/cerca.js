@@ -1,5 +1,5 @@
 import { Markup } from "telegraf";
-import { cercaGiochi, dettagliGioco } from "../services/bgg.js";
+import { cercaGiochi, dettagliGioco, linkFilesBGG } from "../services/bgg.js";
 import Gioco from "../models/Gioco.js";
 
 const GIORNI_CACHE = 7;
@@ -41,9 +41,9 @@ async function inviaScheda(ctx, bggId) {
   }
 
   const testo = formattaScheda(gioco);
-  // Callback: cerca il regolamento (ITA se c'è) tra i file BGG.
+  // Bottone URL diretto alla sezione file/regolamenti su BGG.
   const bottoni = Markup.inlineKeyboard([
-    [Markup.button.callback("📖 Regolamento", `reg:${gioco.bgg_id}`)]
+    [Markup.button.url("📖 Regolamento / File BGG", linkFilesBGG(gioco.bgg_id))]
   ]);
 
   if (gioco.immagine_url) {
