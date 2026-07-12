@@ -24,7 +24,7 @@ export function registraComandoRegolamento(bot) {
           {
             parse_mode: "Markdown",
             ...Markup.inlineKeyboard([
-              [Markup.button.url("📂 File 🇮🇹 su BGG", linkFilesBGG(gioco.bgg_id))]
+              [Markup.button.url("📂 File 🇮🇹 su BGG", linkFilesBGG(gioco.bgg_id, gioco.nome))]
             ])
           }
         );
@@ -34,7 +34,7 @@ export function registraComandoRegolamento(bot) {
       const bottoni = risultati.map((r) =>
         [Markup.button.url(
           `📖 ${r.nome}${r.anno ? ` (${r.anno})` : ""}`,
-          linkFilesBGG(r.bgg_id)
+          linkFilesBGG(r.bgg_id, r.nome)
         )]
       );
 

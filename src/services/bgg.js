@@ -119,9 +119,20 @@ export async function dettagliGioco(bggId, tentativiMax = 5) {
  */
 const LANG_ITALIANO = "2193"; // languageid BGG per l'italiano
 
+// Converte "Brass: Birmingham" -> "brass-birmingham" (slug URL BGG).
+function slugify(nome) {
+  return (nome ?? "")
+    .normalize("NFD").replace(/[̀-ͯ]/g, "") // rimuove accenti
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 // Link alla sezione file del gioco, filtrata per lingua (default: italiano).
-// Passa lingua=null per tutti i file senza filtro.
-export function linkFilesBGG(bggId, lingua = LANG_ITALIANO) {
-  const base = `https://boardgamegeek.com/boardgame/${bggId}/files`;
+// Lo slug del nome è necessario: senza, BGG redirige alla pagina gioco e
+// perde il tab file. Passa lingua=null per tutti i file senza filtro.
+export function linkFilesBGG(bggId, nome = "", lingua = LANG_ITALIANO) {
+  const slug = slugify(nome);
+  const base = `https://boardgamegeek.com/boardgame/${bggId}${slug ? `/${slug}` : ""}/files`;
   return lingua ? `${base}?pageid=1&languageid=${lingua}` : base;
 }

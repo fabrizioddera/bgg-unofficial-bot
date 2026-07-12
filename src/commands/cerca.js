@@ -43,7 +43,7 @@ async function inviaScheda(ctx, bggId) {
   const testo = formattaScheda(gioco);
   // Bottone URL diretto alla sezione file/regolamenti su BGG.
   const bottoni = Markup.inlineKeyboard([
-    [Markup.button.url("📖 Regolamento 🇮🇹", linkFilesBGG(gioco.bgg_id))]
+    [Markup.button.url("📖 Regolamento 🇮🇹", linkFilesBGG(gioco.bgg_id, gioco.nome))]
   ]);
 
   if (gioco.immagine_url) {
