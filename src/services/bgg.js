@@ -136,3 +136,51 @@ export function linkFilesBGG(bggId, nome = "", lingua = LANG_ITALIANO) {
   const base = `https://boardgamegeek.com/boardgame/${bggId}${slug ? `/${slug}` : ""}/files`;
   return lingua ? `${base}?pageid=1&languageid=${lingua}` : base;
 }
+
+/**
+ * Elenca i file di un gioco (regolamenti, riassunti, FAQ, traduzioni).
+ * Filtra per lingua (default italiano); passa lingua=null per tutte.
+ * Ordina per voti positivi. Ritorna [{ titolo, voti, url }].
+ *
+ * NB: usa l'endpoint privato api.geekdo.com/api/files. Uso personale, pochi hit/giorno.
+ */
+export async function elencoFileBGG(bggId, lingua = LANG_ITALIANO, max = 10) {
+  const params = {
+    objectid: bggId,
+    objecttype: "thing",
+    pageid: 1,
+    showcount: 40,
+    sort: "hot"
+  };
+  if (lingua) params.languageid = lingua;
+
+  // Piccolo retry: la rete verso geekdo a volte fa i capricci.
+  let data;
+  for (let tentativo = 1; tentativo <= 3; tentativo++) {
+    try {
+      const res = await axios.get("https://api.geekdo.com/api/files", {
+        params,
+        timeout: 15000,
+        headers: {
+          "User-Agent": "bgg-unofficial-bot",
+          ...(process.env.BGG_TOKEN ? { Authorization: `Bearer ${process.env.BGG_TOKEN}` } : {})
+        }
+      });
+      data = res.data;
+      break;
+    } catch (err) {
+      if (tentativo === 3) throw err;
+      await sleep(1000);
+    }
+  }
+
+  const files = Array.isArray(data?.files) ? data.files : [];
+  return files
+    .sort((a, b) => (Number(b.numpositive) || 0) - (Number(a.numpositive) || 0))
+    .slice(0, max)
+    .map((f) => ({
+      titolo: f.title || f.filename || "File",
+      voti: Number(f.numpositive) || 0,
+      url: `https://boardgamegeek.com${f.href}`
+    }));
+}

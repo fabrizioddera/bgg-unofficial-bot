@@ -1,5 +1,5 @@
 import { Markup } from "telegraf";
-import { cercaGiochi, dettagliGioco, linkFilesBGG } from "../services/bgg.js";
+import { cercaGiochi, dettagliGioco } from "../services/bgg.js";
 import Gioco from "../models/Gioco.js";
 
 const GIORNI_CACHE = 7;
@@ -41,9 +41,9 @@ async function inviaScheda(ctx, bggId) {
   }
 
   const testo = formattaScheda(gioco);
-  // Bottone URL diretto alla sezione file/regolamenti su BGG.
+  // Callback: mostra la lista dei file/regolamenti (ITA) dentro Telegram.
   const bottoni = Markup.inlineKeyboard([
-    [Markup.button.url("📖 Regolamento 🇮🇹", linkFilesBGG(gioco.bgg_id, gioco.nome))]
+    [Markup.button.callback("📖 Regolamenti 🇮🇹", `file:${gioco.bgg_id}`)]
   ]);
 
   if (gioco.immagine_url) {
